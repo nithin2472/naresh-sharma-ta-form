@@ -17,6 +17,8 @@ form input, form textarea { width:100%; padding:8px 10px; margin-bottom:12px; bo
 form textarea { resize:vertical; min-height:60px; }
 section.grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
 section.grid .full { grid-column:1/-1; }
+table { width:100%; border-collapse: collapse; margin-top:12px; }
+th, td { border:1px solid #ccc; padding:6px 10px; text-align:left; }
 button { padding:10px 16px; border:none; border-radius:6px; cursor:pointer; background:#0b63a5; color:#fff; font-weight:bold; transition:0.2s; }
 button:hover { background:#095082; }
 button.ghost { background:#eee; color:#333; }
@@ -34,53 +36,39 @@ footer.muted { font-size:12px; color:#888; margin-top:20px; }
     </div>
   </header>
 
-  <form id="taForm" class="card" onsubmit="return handleSubmit(event)">
+  <form id="taForm">
     <section class="grid">
-      <div>
-        <label>Employee Name</label>
-        <input type="text" id="empName" required placeholder="e.g. Rajesh Kumar">
-      </div>
-      <div>
-        <label>Employee Code / No.</label>
-        <input type="text" id="empCode" placeholder="e.g. 12345">
-      </div>
-      <div>
-        <label>Designation</label>
-        <input type="text" id="designation" placeholder="e.g. Technician">
-      </div>
-      <div>
-        <label>Department / Office</label>
-        <input type="text" id="department" placeholder="e.g. Accounts">
-      </div>
-      <div>
-        <label>Claim From (Date)</label>
-        <input type="date" id="claimFrom" required>
-      </div>
-      <div>
-        <label>Claim To (Date)</label>
-        <input type="date" id="claimTo" required>
-      </div>
-      <div class="full">
-        <label>Purpose of Journey</label>
-        <textarea id="purpose" placeholder="Purpose / remarks"></textarea>
-      </div>
+      <div><label>Employee Name</label><input type="text" id="empName" required placeholder="e.g. Rajesh Kumar"></div>
+      <div><label>Employee Code / No.</label><input type="text" id="empCode" placeholder="e.g. 12345"></div>
+      <div><label>Designation</label><input type="text" id="designation" placeholder="e.g. Technician"></div>
+      <div><label>Department / Office</label><input type="text" id="department" placeholder="e.g. Accounts"></div>
+      <div><label>Claim From (Date)</label><input type="date" id="claimFrom" required></div>
+      <div><label>Claim To (Date)</label><input type="date" id="claimTo" required></div>
+      <div class="full"><label>Purpose of Journey</label><textarea id="purpose" placeholder="Purpose / remarks"></textarea></div>
     </section>
 
-<div style="margin-top:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-  <div class="muted">You can add multiple journey rows. The form is printable and generates a JSON payload on submit.</div>
-  <div style="display:flex;gap:8px">
-    <button type="submit">Generate Claim</button>
-    <button type="button" class="ghost" onclick="previewPrintable()">Preview / Print</button>
-  </div>
-</div>
+    <table id="journeyTable">
+      <thead>
+        <tr><th>Date</th><th>From</th><th>To</th><th>Mode</th><th>Distance (km)</th><th>Amount</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button type="button" onclick="addRow()">Add Journey</button>
 
-<footer class="muted">Template created for Naresh Sharma — modify branding or backend as needed.</footer>
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div class="muted">You can add multiple journey rows. The form is printable and generates a JSON payload on submit.</div>
+      <div style="display:flex;gap:8px">
+        <button type="submit">Generate Claim</button>
+        <button type="button" class="ghost" onclick="previewPrintable()">Preview / Print</button>
+      </div>
+    </div>
 
+    <footer class="muted">Template created for Naresh Sharma — GitHub Pages version of Netlify-style form.</footer>
   </form>
 </div>
 
 <script>
-// Autofill static fields for single user
+// Autofill static fields
 window.addEventListener('DOMContentLoaded', () => {
   const fields = ['empName','empCode','designation','department'];
   fields.forEach(id => {
@@ -90,15 +78,21 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-document.getElementById('taForm').addEventListener('submit', () => {
+document.getElementById('taForm').addEventListener('submit', e => {
+  e.preventDefault();
   const fields = ['empName','empCode','designation','department'];
-  fields.forEach(id => {
-    const val = document.getElementById(id).value;
-    localStorage.setItem(id, val);
-  });
+  fields.forEach(id => { localStorage.setItem(id, document.getElementById(id).value); });
+  alert('TA claim submitted! (JSON output functionality can be added)');
 });
 
-// Placeholder for TA form functions: handleSubmit, addRow, recalcRow, previewPrintable
+// Journey table functions
+function addRow(){
+  const tbody = document.querySelector('#journeyTable tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="date"></td><td><input></td><td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><button type="button" onclick="this.closest('tr').remove()">Remove</button></td>`;
+  tbody.appendChild(tr);
+}
+function previewPrintable(){ window.print(); }
 </script>
 
 </body>
