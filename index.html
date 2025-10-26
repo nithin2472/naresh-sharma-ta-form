@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naresh Sharma — TA Claim Form</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+/* Keep existing styles as before */
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <img src="favicon.png" alt="logo">
+    <div>
+      <h1>Naresh Sharma — TA Claim Form</h1>
+      <p class="lead">Fill this form to prepare your Traveling Allowance (TA) claim. Mobile friendly — printable.</p>
+    </div>
+  </header>
+
+  <form id="taForm" class="card" onsubmit="return handleSubmit(event)">
+    <section class="grid">
+      <div>
+        <label>Employee Name</label>
+        <input type="text" id="empName" required placeholder="e.g. Rajesh Kumar">
+      </div>
+      <div>
+        <label>Employee Code / No.</label>
+        <input type="text" id="empCode" placeholder="e.g. 12345">
+      </div>
+      <div>
+        <label>Designation</label>
+        <input type="text" id="designation" placeholder="e.g. Technician">
+      </div>
+      <div>
+        <label>Department / Office</label>
+        <input type="text" id="department" placeholder="e.g. Accounts">
+      </div>
+      <div>
+        <label>Claim From (Date)</label>
+        <input type="date" id="claimFrom" required>
+      </div>
+      <div>
+        <label>Claim To (Date)</label>
+        <input type="date" id="claimTo" required>
+      </div>
+      <div class="full">
+        <label>Purpose of Journey</label>
+        <textarea id="purpose" placeholder="Purpose / remarks"></textarea>
+      </div>
+    </section>
+
+    <!-- Journey table goes here as before -->
+
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <div class="muted">You can add multiple journey rows. The form is printable and generates a JSON payload on submit.</div>
+      <div style="display:flex;gap:8px">
+        <button type="submit">Generate Claim</button>
+        <button type="button" class="ghost" onclick="previewPrintable()">Preview / Print</button>
+      </div>
+    </div>
+
+    <footer class="muted">Template created for Naresh Sharma — modify branding or backend as needed.</footer>
+  </form>
+</div>
+
+<script>
+// Autofill static fields for single user
+window.addEventListener('DOMContentLoaded', () => {
+  const fields = ['empName','empCode','designation','department'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    const saved = localStorage.getItem(id);
+    if(saved) el.value = saved;
+  });
+});
+
+document.getElementById('taForm').addEventListener('submit', () => {
+  const fields = ['empName','empCode','designation','department'];
+  fields.forEach(id => {
+    const val = document.getElementById(id).value;
+    localStorage.setItem(id, val);
+  });
+});
+
+// Keep all existing TA form functions (handleSubmit, addRow, etc.) here
+</script>
+</body>
+</html>
